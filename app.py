@@ -100,6 +100,15 @@ def delete_product(id):
 
     return product_schema.jsonify(product)
 
+# Delete all products
+@app.route('/product', methods=['DELETE'])
+def delete_all_products():
+    Product.query.delete()
+
+    db.session.commit()
+
+    return jsonify({ 'msg': 'All Products deleted'})
+
 # Run server
 if __name__ == '__main__':
     app.run()

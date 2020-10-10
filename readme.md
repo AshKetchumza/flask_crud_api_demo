@@ -24,4 +24,5 @@ flask run
 * GET     /product/:id
 * POST    /product
 * PUT     /product/:id
+* DELETE  /product
 * DELETE  /product/:id
