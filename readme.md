@@ -1,4 +1,4 @@
-# REST API With Flask & SQL Alchemy & Marshmallow
+# RESTful API using Flask & SQL Alchemy & Marshmallow
 
 > Products API using Python Flask, SQL Alchemy and Marshmallow
 
