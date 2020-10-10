@@ -8,7 +8,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # Init app
 app = Flask(__name__)
 
-# Database
+# Database config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -20,12 +20,14 @@ ma = Marshmallow(app)
 
 # Product Class/Model
 class Product(db.Model):
+    # Define parameters
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
     description = db.Column(db.String(200))
     price = db.Column(db.Float)
     qty = db.Column(db.Integer)
 
+    # Init
     def __init__(self, name, description, price, qty):
         self.name = name
         self.description = description
@@ -44,70 +46,114 @@ products_schema = ProductSchema(many=True)
 # Create a product
 @app.route('/product', methods=['POST'])
 def add_product():
-    name = request.json['name']
-    description = request.json['description']
-    price = request.json['price']
-    qty = request.json['qty']
+    try:
+        # Create vars from request data
+        name = request.json['name']
+        description = request.json['description']
+        price = request.json['price']
+        qty = request.json['qty']
 
-    new_product = Product(name, description, price, qty)
+        # Create object with vars
+        new_product = Product(name, description, price, qty)
 
-    db.session.add(new_product)
-    db.session.commit()
+        # Add to DB and commit
+        db.session.add(new_product)
+        db.session.commit()
 
-    return product_schema.jsonify(new_product)
+        # API response
+        return product_schema.jsonify(new_product)
+    except Exception as err:
+        # Handle exception
+        return jsonify({'msg': err.args, 'error': 'Exception'})
 
 # Get all products
 @app.route('/product', methods=['GET'])
 def get_products():
-    all_products = Product.query.all()
-    result = products_schema.dump(all_products)
-
-    return jsonify(result)
+    try:
+        # Query DB for all objects
+        all_products = Product.query.all()
+        # Create object from data
+        result = products_schema.dump(all_products)
+        
+        # API response
+        return jsonify(result)
+    except Exception as err:
+        # Handle exception
+        return jsonify({'msg': err.args, 'error': 'Exception'})
 
 # Get single products
 @app.route('/product/<id>', methods=['GET'])
 def get_product(id):
-    product = Product.query.get(id)
+    try:
+        # Create object equal to DB query for specific object
+        product = Product.query.get(id)
 
-    return product_schema.jsonify(product)
+        # API response
+        return product_schema.jsonify(product)
+    except Exception as err:
+        # Handle exception
+        return jsonify({'msg': err.args, 'error': 'Exception'})
 
 # Update a product
 @app.route('/product/<id>', methods=['PUT'])
 def update_product(id):
-    product = Product.query.get(id)
+    try:
+        # Create object equal to DB query for specific object
+        product = Product.query.get(id)
 
-    name = request.json['name']
-    description = request.json['description']
-    price = request.json['price']
-    qty = request.json['qty']
+        # Create vars from request data
+        name = request.json['name']
+        description = request.json['description']
+        price = request.json['price']
+        qty = request.json['qty']
 
-    product.name = name
-    product.description = description
-    product.price = price
-    product.qty = qty
+        # Update new object with vars
+        product.name = name
+        product.description = description
+        product.price = price
+        product.qty = qty
 
-    db.session.commit()
+        # Commit to DB
+        db.session.commit()
 
-    return product_schema.jsonify(product)
+        # API response
+        return product_schema.jsonify(product)
+    except Exception as err:
+        # Handle exception
+        return jsonify({'msg': err.args, 'error': 'Exception'})
 
 # Delete a product
 @app.route('/product/<id>', methods=['DELETE'])
 def delete_product(id):
-    product = Product.query.get(id)
-    
-    db.session.delete(product)
-    db.session.commit()
+    try:
+        # Create object equal to DB query for specific object
+        product = Product.query.get(id)
 
-    return product_schema.jsonify(product)
+        # Delete from DB and commit
+        db.session.delete(product)
+        db.session.commit()
+
+        # API response
+        return product_schema.jsonify(product)
+    except Exception as err:
+        # Handle exception
+        return jsonify({'msg': err.args, 'error': 'Exception'})
 
 # Delete all products
 @app.route('/product', methods=['DELETE'])
 def delete_all_products():
-    Product.query.delete()
+    try:
+        # Delete all objects of class
+        Product.query.delete()
 
-    db.session.commit()
+        # Commit to DB
+        db.session.commit()
 
-    return jsonify({ 'msg': 'All Products deleted'})
+        # API response
+        return jsonify({ 'msg': 'All Products deleted'})
+    except Exception as err:
+         # Handle exception
+        return jsonify({'msg': err.args, 'error': 'Exception'})
 
 # Run server
 if __name__ == '__main__':
