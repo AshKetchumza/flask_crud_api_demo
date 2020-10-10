@@ -1,6 +1,6 @@
-# RESTful API using Flask & SQL Alchemy & Marshmallow
+# Python RESTful API using Flask & SQL Alchemy & Marshmallow
 
-> Products API using Python Flask, SQL Alchemy and Marshmallow
+> Create, read, update and delete objects from a SQLite DB
 
 ## Quick Start
 
