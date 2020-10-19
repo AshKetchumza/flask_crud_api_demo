@@ -26,3 +26,14 @@ flask run
 * PUT     /product/:id
 * DELETE  /product
 * DELETE  /product/:id
+
+## Unit Tests
+
+``` bash
+# To run only the tests
+python -m unittest discover __unittests__
+
+# To get a coverage report
+coverage run -m unittest discover __unittests__/
+coverage report -m
+```

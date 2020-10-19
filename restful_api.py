@@ -145,4 +145,4 @@ def delete_all_products():
 
 # Run server
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run()
