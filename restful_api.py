@@ -64,35 +64,27 @@ def add_product():
         return product_schema.jsonify(new_product)
     except Exception as err:
         # Handle exception
-        return jsonify({'msg': err.args, 'error': 'Exception'})
+        return jsonify({'msg': err.args, 'error': 'Exception'}), 400
 
 # Get all products
 @app.route('/product', methods=['GET'])
 def get_products():
-    try:
-        # Query DB for all objects
-        all_products = Product.query.all()
-        # Create object from data
-        result = products_schema.dump(all_products)
-        
-        # API response
-        return jsonify(result)
-    except Exception as err:
-        # Handle exception
-        return jsonify({'msg': err.args, 'error': 'Exception'})
+    # Query DB for all objects
+    all_products = Product.query.all()
+    # Create object from data
+    result = products_schema.dump(all_products)
+    
+    # API response
+    return jsonify(result)
 
 # Get single products
 @app.route('/product/<id>', methods=['GET'])
 def get_product(id):
-    try:
-        # Create object equal to DB query for specific object
-        product = Product.query.get(id)
+    # Create object equal to DB query for specific object
+    product = Product.query.get(id)
 
-        # API response
-        return product_schema.jsonify(product)
-    except Exception as err:
-        # Handle exception
-        return jsonify({'msg': err.args, 'error': 'Exception'})
+    # API response
+    return product_schema.jsonify(product)
 
 # Update a product
 @app.route('/product/<id>', methods=['PUT'])
@@ -142,19 +134,15 @@ def delete_product(id):
 # Delete all products
 @app.route('/product', methods=['DELETE'])
 def delete_all_products():
-    try:
-        # Delete all objects of class
-        Product.query.delete()
+    # Delete all objects of class
+    Product.query.delete()
 
-        # Commit to DB
-        db.session.commit()
+    # Commit to DB
+    db.session.commit()
 
-        # API response
-        return jsonify({ 'msg': 'All Products deleted'})
-    except Exception as err:
-         # Handle exception
-        return jsonify({'msg': err.args, 'error': 'Exception'})
+    # API response
+    return jsonify({ 'msg': 'All Products deleted'})
 
 # Run server
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, port=8080)
